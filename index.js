@@ -1,5 +1,6 @@
-import * as core from "@actions/core";
-import * as github from "@actions/github";
+const core = require('@actions/core');
+const github = require('@actions/github');
+
 
 const { context = {} } = github;
 const { pull_request, head_commit, ref } = context.payload;

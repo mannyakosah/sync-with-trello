@@ -1,13 +1,35 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+author: Manny Akosaj, @mannyakosah
+name: sync-with-trello
+description: GitHub Action to attach GitHub branches, commits and pull requests to a Trello card
+branding:
+  icon: "check-square"
+  color: "gray-dark"
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  trello-api-key:
+    description: Trello API key, visit https://trello.com/app-key for key
     required: true
-    default: 'World'
-outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  trello-auth-token:
+    description: Trello auth token, visit https://trello.com/app-key then click generate a token
+    required: true
+  trello-board-id:
+    description: Trello board ID, visit a board then append .json to url to find id
+    required: true
+  trello-card-action:
+    description: Trello card action, either "Comment" or "Attachment"
+    required: true
+  trello-list-name-commit:
+    description: Trello list name for new commit, for example "Doing", "In Progress", etc
+    required: true
+  trello-list-name-pr-open:
+    description: Trello list name for open pull request, for example "Reviewing", "In Review", etc
+    required: false
+  trello-list-name-pr-closed:
+    description: Trello list name for closed pull request, for example "Testing", "Done", etc
+    required: false
+  trello-card-id-pattern:
+    description: Custom pattern to extract Trello card ID
+    default: "#"
+    required: false
 runs:
-  using: 'node20'
-  main: 'index.js'
+  using: node20
+  main: dist/index.js
