@@ -35,12 +35,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: dalezak/github-commit-to-trello-card@main
+      - uses: mannyaskosah/syn-with-trello@latest
         with:
           trello-api-key: ${{ secrets.TRELLO_KEY }}
           trello-auth-token: ${{ secrets.TRELLO_TOKEN }}
           trello-board-id: ${{ secrets.TRELLO_BOARD }}
-          trello-card-action: "Attachment"
           trello-list-name-commit: "Doing"
           trello-list-name-pr-open: "Reviewing"
           trello-list-name-pr-closed: "Testing"

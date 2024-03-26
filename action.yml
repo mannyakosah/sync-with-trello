@@ -1,4 +1,4 @@
-author: Manny Akosaj, @mannyakosah
+author: Manny Akosah, @mannyakosah
 name: sync-with-trello
 description: GitHub Action to attach GitHub branches, commits and pull requests to a Trello card
 branding:
@@ -7,28 +7,18 @@ branding:
 inputs:
   trello-api-key:
     description: Trello API key, visit https://trello.com/app-key for key
-    required: true
+    required: false
   trello-auth-token:
     description: Trello auth token, visit https://trello.com/app-key then click generate a token
-    required: true
+    required: false
   trello-board-id:
     description: Trello board ID, visit a board then append .json to url to find id
-    required: true
-  trello-card-action:
-    description: Trello card action, either "Comment" or "Attachment"
-    required: true
-  trello-list-name-commit:
-    description: Trello list name for new commit, for example "Doing", "In Progress", etc
-    required: true
-  trello-list-name-pr-open:
-    description: Trello list name for open pull request, for example "Reviewing", "In Review", etc
     required: false
-  trello-list-name-pr-closed:
-    description: Trello list name for closed pull request, for example "Testing", "Done", etc
+  trello-review-list-name:
+    description: Trello list name for open pull request, for example "Testing", "Done", etc
     required: false
-  trello-card-id-pattern:
-    description: Custom pattern to extract Trello card ID
-    default: "#"
+  trello-completed-list-name:
+    description: Trello list name for closed pull request, for example "Reviewing", "In Review", etc
     required: false
 runs:
   using: node20
