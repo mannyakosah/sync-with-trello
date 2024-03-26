@@ -5,7 +5,6 @@ const fetch = require("node-fetch");
 const { context = {} } = github;
 const { pull_request, head_commit, ref } = context.payload;
 
-core.getInput("trello-card-id-pattern", { required: false }) || "#";
 const trelloApiKey = core.getInput("trello-api-key", { required: true });
 const trelloAuthToken = core.getInput("trello-auth-token", { required: true });
 const trelloReviewListName = core.getInput("trello-list-name-pr-open", {
