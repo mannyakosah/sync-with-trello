@@ -22,7 +22,6 @@ function getBranchName(ref) {
 }
 
 function getTrelloCardIdFromBranchName(branchName) {
-  console.log(`getTrelloCardIdFromBranchName(${branchName})`);
   return branchName.split("-").slice(-1)[0];
 }
 
@@ -114,13 +113,11 @@ async function moveCardToList(cardId, listName) {
 }
 
 async function handleHeadCommit(data) {
-  console.log("handleHeadCommit", data);
   let attachement_url = data.url;
   await addAttachmentToCard(cardId, attachement_url);
 }
 
 async function handlePullRequest(data) {
-  console.log("handlePullRequest", data);
   const prUrl = data.html_url || data.url;
   await addAttachmentToCard(cardId, prUrl);
   if (data.state == "open" && trelloReviewListName) {
@@ -138,7 +135,8 @@ async function run() {
   }
 }
 
-const cardId = getTrelloCardIdFromBranchName(getBranchName(ref));
+const refString = pull_request ? pull_request.head.ref : ref;
+const cardId = getTrelloCardIdFromBranchName(getBranchName(refString));
 if (cardId && cardId.length == 8) {
   run();
 } else {

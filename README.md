@@ -54,6 +54,6 @@ npm run build
 #### Release Build
 
 ```
-git tag -a "v2" -m "v2"
-git push origin --tags
+git tag -a -m "My first action release" v1.1
+git push --follow-tags
 ```
