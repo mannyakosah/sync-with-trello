@@ -143,6 +143,6 @@ if (cardId && cardId.length == 8) {
   run();
 } else {
   console.log(
-    "Trello card id not found in branch name. Will not sync with Trello."
+    "Trello card id not found in branch name. Will not sync with Trello"
   );
 }
