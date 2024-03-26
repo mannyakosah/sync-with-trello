@@ -18,24 +18,6 @@ const trelloBoardId = core.getInput("trello-board-id", {
   required: false,
 });
 
-// const trelloApiKey = "b15611f8a1b844a5a18bed19e9af882a";
-// const trelloAuthToken =
-//   "ATTA10615c47d2558ab3bf41f1068a5b163aa7ea68c6a60012cd9421fbb749468224464586C8";
-// head_commit = {
-//   //   message:
-//   //     "Merge pull request #1 from mohitkumar-13/feature/branch-1\n\nfeature/branch-1",
-//   //   url: "https://api.github.com/repos/mohitkumar-13/test/commits/1",
-// };
-// ref = "refs/heads/feature/branch-yyelQXIX";
-// const trelloReviewListName = "Review";
-// const trelloCompletedListName = "Done";
-// const trelloBoardId = "WqDGmOtL";
-// const pull_request = {
-//   state: "closed",
-//   title: "feature/branch-1",
-//   url: "https://api.github.com/repos/mohitkumar-13/test/pulls/1",
-// };
-
 function getBranchName(ref) {
   return ref.replace("refs/heads/", "");
 }
