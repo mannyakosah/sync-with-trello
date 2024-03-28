@@ -4,19 +4,23 @@ const fetch = require("node-fetch");
 
 const { context = {} } = github;
 const { pull_request, head_commit, ref } = context.payload;
-console.log("pull_request", pull_request);
-console.log("head_commit", head_commit);
-console.log("ref", ref);
+const refString = pull_request ? pull_request.head.ref : ref;
+
+console.log("Commit ref:", ref);
+console.log("Pull request payload:", pull_request);
+console.log("Commit payload:", head_commit);
+console.log("Trello review list name:", trelloReviewListName);
+console.log("trello completed listname:", trelloCompletedListName);
 
 const trelloApiKey = core.getInput("trello-api-key", { required: true });
 const trelloAuthToken = core.getInput("trello-auth-token", { required: true });
+const trelloBoardId = core.getInput("trello-board-id", {
+  required: true,
+});
 const trelloReviewListName = core.getInput("trello-review-list-name", {
   required: false,
 });
 const trelloCompletedListName = core.getInput("trello-completed-list-name", {
-  required: false,
-});
-const trelloBoardId = core.getInput("trello-board-id", {
   required: false,
 });
 
@@ -124,10 +128,7 @@ async function handleHeadCommit(data) {
 async function handlePullRequest(data) {
   const prUrl = data.html_url || data.url;
   await addAttachmentToCard(cardId, prUrl);
-  console.log("trelloReviewListName", trelloReviewListName);
-  console.log("trelloCompletedListName", trelloCompletedListName);
-  console.log("data.state", data.state);
-
+  console.log("Pull request is:", data.state);
   if (data.state == "open" && trelloReviewListName) {
     await moveCardToList(cardId, trelloReviewListName);
   } else if (data.state == "closed" && trelloCompletedListName) {
@@ -143,7 +144,6 @@ async function run() {
   }
 }
 
-const refString = pull_request ? pull_request.head.ref : ref;
 const cardId = getTrelloCardIdFromBranchName(getBranchName(refString));
 if (cardId && cardId.length == 8) {
   run();
