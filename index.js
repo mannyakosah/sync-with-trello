@@ -124,6 +124,10 @@ async function handleHeadCommit(data) {
 async function handlePullRequest(data) {
   const prUrl = data.html_url || data.url;
   await addAttachmentToCard(cardId, prUrl);
+  console.log("trelloReviewListName", trelloReviewListName);
+  console.log("trelloCompletedListName", trelloCompletedListName);
+  console.log("data.state", data.state);
+
   if (data.state == "open" && trelloReviewListName) {
     await moveCardToList(cardId, trelloReviewListName);
   } else if (data.state == "closed" && trelloCompletedListName) {
