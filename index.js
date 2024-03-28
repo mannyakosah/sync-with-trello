@@ -4,6 +4,9 @@ const fetch = require("node-fetch");
 
 const { context = {} } = github;
 const { pull_request, head_commit, ref } = context.payload;
+console.log("pull_request", pull_request);
+console.log("head_commit", head_commit);
+console.log("ref", ref);
 
 const trelloApiKey = core.getInput("trello-api-key", { required: true });
 const trelloAuthToken = core.getInput("trello-auth-token", { required: true });
@@ -18,6 +21,7 @@ const trelloBoardId = core.getInput("trello-board-id", {
 });
 
 function getBranchName(ref) {
+  console.log("getBranchName(ref) ", ref);
   return ref.replace("refs/heads/", "");
 }
 
