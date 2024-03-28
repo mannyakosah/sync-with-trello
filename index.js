@@ -18,12 +18,11 @@ const trelloCompletedListName = core.getInput("trello-completed-list-name", {
   required: false,
 });
 
-console.log("Commit ref:", ref);
+console.log("Commit ref:", refString);
 console.log("Pull request payload:", pull_request);
 console.log("Commit payload:", head_commit);
 
 function getBranchName(ref) {
-  console.log("getBranchName(ref) ", ref);
   return ref.replace("refs/heads/", "");
 }
 
