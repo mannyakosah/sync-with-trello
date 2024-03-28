@@ -10,10 +10,10 @@ console.log("ref", ref);
 
 const trelloApiKey = core.getInput("trello-api-key", { required: true });
 const trelloAuthToken = core.getInput("trello-auth-token", { required: true });
-const trelloReviewListName = core.getInput("trello-list-name-pr-open", {
+const trelloReviewListName = core.getInput("trello-review-list-name", {
   required: false,
 });
-const trelloCompletedListName = core.getInput("trello-list-name-pr-open", {
+const trelloCompletedListName = core.getInput("trello-completed-list-name", {
   required: false,
 });
 const trelloBoardId = core.getInput("trello-board-id", {

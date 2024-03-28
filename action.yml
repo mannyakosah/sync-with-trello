@@ -13,7 +13,7 @@ inputs:
     required: false
   trello-board-id:
     description: Trello board ID, visit a board then append .json to url to find id
-    required: false
+    required: true
   trello-review-list-name:
     description: Trello list name for open pull request, for example "Testing", "Done", etc
     required: false
