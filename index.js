@@ -4,7 +4,6 @@ const fetch = require("node-fetch");
 
 const { context = {} } = github;
 const { pull_request, head_commit, ref } = context.payload;
-const refString = pull_request ? pull_request.head.ref : ref;
 
 const trelloApiKey = core.getInput("trello-api-key", { required: true });
 const trelloAuthToken = core.getInput("trello-auth-token", { required: true });
@@ -18,21 +17,33 @@ const trelloCompletedListName = core.getInput("trello-completed-list-name", {
   required: false,
 });
 
-console.log("Commit ref:", refString);
-console.log("Pull request payload:", pull_request);
-console.log("Commit payload:", head_commit);
-
-function getBranchName(ref) {
-  return ref.replace("refs/heads/", "");
+function getTrelloCardId() {
+  if (pull_request) {
+    var stringWithBranchName = pull_request.head.ref;
+    return retrieveAlphanumericSubstring(stringWithBranchName);
+  } else {
+    // when pull_request is undefined, event could be a commit or a merge.
+    // if it's a commit, we extract the trello card id from the ref (branch name)
+    // if it's a merge, we extract the trello card id from the merge commit message
+    return (
+      retrieveAlphanumericSubstring(ref) ||
+      retrieveAlphanumericSubstring(head_commit.message)
+    );
+  }
 }
 
-function getTrelloCardIdFromBranchName(branchName) {
-  return branchName.split("-").slice(-1)[0];
+function retrieveAlphanumericSubstring(inputString) {
+  //regular expression pattern to match '#' followed by 8 alphanumeric characters
+  var pattern = /#[a-zA-Z0-9]{8}\b/g;
+  var matches = inputString.match(pattern);
+  if (matches && matches.length > 0) {
+    return matches[0].substring(1);
+  } else {
+    return null;
+  }
 }
 
 async function addAttachmentToCard(cardId, attachmentUrl) {
-  console.log("Trello card id provided: ", cardId);
-
   const api_route = "https://api.trello.com/1/cards/" + cardId + "/attachments";
   const response = await fetch(api_route, {
     method: "POST",
@@ -118,8 +129,8 @@ async function moveCardToList(cardId, listName) {
 }
 
 async function handleHeadCommit(data) {
-  let attachement_url = data.url;
-  await addAttachmentToCard(cardId, attachement_url);
+  let attachment_url = data.url;
+  await addAttachmentToCard(cardId, attachment_url);
 }
 
 async function handlePullRequest(data) {
@@ -127,27 +138,39 @@ async function handlePullRequest(data) {
   await addAttachmentToCard(cardId, prUrl);
   console.log("Pull request is:", data.state);
   console.log("Trello review list name:", trelloReviewListName);
-  console.log("Trello completed listname:", trelloCompletedListName);
   if (data.state == "open" && trelloReviewListName) {
     await moveCardToList(cardId, trelloReviewListName);
-  } else if (data.state == "closed" && trelloCompletedListName) {
-    await moveCardToList(cardId, trelloCompletedListName);
   }
 }
 
+async function handleMergeCommit() {
+  console.log("Trello completed listname:", trelloCompletedListName);
+  await moveCardToList(cardId, trelloCompletedListName);
+}
+
 async function run() {
-  if (head_commit && head_commit.message) {
+  if (
+    head_commit &&
+    head_commit.message &&
+    head_commit.message.includes("Merge pull request")
+  ) {
+    handleMergeCommit(head_commit);
+  } else if (head_commit) {
     handleHeadCommit(head_commit);
-  } else if (pull_request && pull_request.title) {
+  } else if (pull_request) {
     handlePullRequest(pull_request);
   }
 }
 
-const cardId = getTrelloCardIdFromBranchName(getBranchName(refString));
-if (cardId && cardId.length == 8) {
+console.log("Pull request payload:", pull_request);
+console.log("Commit payload:", head_commit);
+
+const cardId = getTrelloCardId();
+if (cardId) {
+  console.log("Trello card id provided: ", cardId);
   run();
 } else {
   console.log(
-    "Trello card id not found in branch name. Will not sync with Trello"
+    "Trello card id not found in branch name. Will not sync with Trello."
   );
 }
